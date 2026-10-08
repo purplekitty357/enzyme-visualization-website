@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>라이페이스</title>
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.1.0/build/3Dmol-min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #c2e0e5; }
+  .poster {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .poster > img { display: block; width: 100%; height: auto; }
+
+  /* 포스터 이미지 위에서 구조 그림이 있던 자리 (이미지 크기 대비 %) */
+  .structure {
+    position: absolute;
+    left: 8.5%;
+    top: 21.3%;
+    width: 32%;
+    height: 23.6%;
+  }
+  #viewer {
+    position: absolute;
+    inset: 0;
+    cursor: grab;
+  }
+  #viewer:active { cursor: grabbing; }
+  .tools {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2%;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 1;
+  }
+  .tools button {
+    font: 12px sans-serif;
+    color: #333;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    padding: 3px 8px;
+    cursor: pointer;
+  }
+  @media (max-width: 600px) {
+    .tools button { font-size: 10px; padding: 2px 5px; }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <img src="poster.png" alt="라이페이스 포스터">
+  <div class="structure">
+    <div id="viewer"></div>
+    <div class="tools">
+      <button type="button" id="spin-btn">회전 멈춤</button>
+      <button type="button" id="reset-btn">처음 위치</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // AlphaFold pLDDT(신뢰도) 색 – 원래 캡처 그림과 같은 파랑/하늘/노랑/주황
+  function plddtColor(atom) {
+    const b = atom.b;
+    if (b >= 90) return "#0053D6";
+    if (b >= 70) return "#65CBF3";
+    if (b >= 50) return "#FFDB13";
+    return "#FF7D45";
+  }
+
+  const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "white", backgroundAlpha: 0, antialias: true });
+  let spinning = true;
+
+  // 끝의 긴 꼬리(신호 펩타이드)는 빼고 몸통에 맞춰 화면을 채움
+  function fitView() {
+    viewer.zoomTo({ resi: "17-465" });
+    viewer.zoom(1.1);
+    viewer.render();
+  }
+
+  // 첨부한 PDB와 같은 AlphaFold 구조(인간 췌장 라이페이스, P16233)를 불러옴
+  async function loadStructure() {
+    const info = await (await fetch("https://alphafold.ebi.ac.uk/api/prediction/P16233")).json();
+    const pdb = await (await fetch(info[0].pdbUrl)).text();
+    viewer.addModel(pdb, "pdb");
+    viewer.setStyle({}, { cartoon: { colorfunc: plddtColor } });
+    fitView();
+    viewer.spin("y", 0.6);
+  }
+  loadStructure();
+
+  // 창 크기가 바뀌면 포스터와 함께 뷰어 크기도 맞춤
+  window.addEventListener("resize", () => { viewer.resize(); viewer.render(); });
+
+  document.getElementById("spin-btn").addEventListener("click", e => {
+    spinning = !spinning;
+    viewer.spin(spinning ? "y" : false, 0.6);
+    e.target.textContent = spinning ? "회전 멈춤" : "자동 회전";
+  });
+  document.getElementById("reset-btn").addEventListener("click", fitView);
+</script>
+</body>
+</html>
