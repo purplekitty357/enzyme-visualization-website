@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>라이페이스</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.1.0/build/3Dmol-min.js"></script>
+<style>
+  :root {
+    --bg: #c2e0e5;
+    --yellow: #ffdc64;
+    --green: #96cf8f;
+    --ink: #111;
+    --white: #fff;
+    --blue-text: #1f1fd1;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans KR", sans-serif;
+  }
+  .poster {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 72px 24px;
+    overflow: hidden;
+  }
+
+  /* ---------- 장식 ---------- */
+  .deco { position: absolute; pointer-events: none; z-index: 2; }
+  .dash path { fill: none; stroke: #fff; stroke-width: 6; stroke-dasharray: 16 12; stroke-linecap: round; }
+
+  /* ---------- 헤더 ---------- */
+  .student {
+    text-align: center;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 12px 0 18px;
+  }
+  .title-box {
+    background: var(--yellow);
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    text-align: center;
+    padding: 10px 0 6px;
+  }
+  .title-box h1 {
+    margin: 0;
+    font-family: "Black Han Sans", sans-serif;
+    font-weight: 400;
+    font-size: 56px;
+    letter-spacing: 1px;
+  }
+  h2.section {
+    font-family: "Black Han Sans", sans-serif;
+    font-weight: 400;
+    font-size: 38px;
+    text-align: center;
+    margin: 30px 0 18px;
+  }
+
+  /* ---------- 작용 원리와 구조 ---------- */
+  .principle {
+    position: relative;
+    background: var(--white);
+    border: 3px solid var(--ink);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 28px;
+    min-height: 350px;
+  }
+  .viewer-wrap {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #viewer {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    cursor: grab;
+  }
+  #viewer:active { cursor: grabbing; }
+  .viewer-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    text-align: center;
+  }
+  .viewer-tools {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .viewer-tools button, .viewer-tools label {
+    font: inherit;
+    font-size: 12px;
+    background: #f3f3f3;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    padding: 3px 8px;
+    cursor: pointer;
+  }
+  .viewer-tools input { display: none; }
+  .viewer-status {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    white-space: pre-line;
+    pointer-events: none;
+  }
+  .principle-text { flex: 1; min-width: 0; padding-right: 56px; }
+  .principle-text p {
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.5;
+    margin: 0 0 6px;
+  }
+  .reaction { width: 100%; height: auto; display: block; }
+
+  /* ---------- 활용 사례 ---------- */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    row-gap: 22px;
+  }
+  .card { position: relative; padding-top: 34px; }
+  .card-label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    background: var(--green);
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    text-align: center;
+    font-family: "Black Han Sans", sans-serif;
+    font-size: 28px;
+    padding: 6px 0 4px;
+    z-index: 1;
+  }
+  .card-body {
+    background: var(--white);
+    border: 3px solid var(--ink);
+    border-radius: 14px;
+    padding: 46px 30px 22px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 1.6;
+    min-height: 100%;
+    word-break: keep-all;
+  }
+  .card-body p { margin: 0; }
+
+  .reference {
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 22px;
+    color: #222;
+  }
+  .reference a { color: inherit; text-decoration: none; }
+
+  /* ---------- 모바일 ---------- */
+  @media (max-width: 760px) {
+    .poster { padding: 24px 16px; }
+    .deco { display: none; }
+    .title-box h1 { font-size: 42px; }
+    h2.section { font-size: 30px; }
+    .principle { flex-direction: column; padding: 18px 14px; }
+    .principle-text { padding-right: 0; }
+    .viewer-wrap { flex: none; }
+    #viewer { width: min(300px, 80vw); height: min(300px, 80vw); }
+    .cards { grid-template-columns: 1fr; }
+    .card-body { font-size: 17px; padding: 44px 16px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- 배경 점선 장식 -->
+  <svg class="deco dash" style="top:-10px;left:-10px;width:330px;height:380px" viewBox="0 0 330 380">
+    <path d="M60 10 C110 60 140 110 200 120 C260 130 320 60 300 10"/>
+    <path d="M0 90 C60 100 120 120 160 140"/>
+    <path d="M10 200 C70 220 110 270 80 320 C60 350 20 360 0 350"/>
+  </svg>
+  <svg class="deco dash" style="bottom:20px;right:-10px;width:300px;height:420px" viewBox="0 0 300 420">
+    <path d="M300 20 C230 20 200 80 240 120 C280 160 300 200 260 240"/>
+    <path d="M300 260 C230 260 180 300 200 360 C210 390 240 410 270 420"/>
+    <path d="M110 420 C130 380 150 360 190 350"/>
+  </svg>
+
+  <!-- 플라스크 -->
+  <svg class="deco" style="top:365px;right:12px;width:140px;height:210px" viewBox="0 0 140 210">
+    <g transform="rotate(-20 70 105)">
+      <rect x="44" y="6" width="52" height="20" rx="8" fill="#f2bb2c" stroke="#e0a516" stroke-width="3"/>
+      <ellipse cx="70" cy="12" rx="20" ry="5" fill="#1b1b1b"/>
+      <path d="M50 26 L50 80 L14 170 Q8 192 32 196 L108 196 Q132 192 126 170 L90 80 L90 26 Z" fill="#f2bb2c" stroke="#e0a516" stroke-width="3"/>
+      <path d="M29 128 L111 128 L124 170 Q128 186 108 188 L32 188 Q12 186 16 170 Z" fill="#6b5aa8"/>
+      <circle cx="58" cy="150" r="3" fill="#f2bb2c"/><circle cx="78" cy="140" r="4" fill="#f2bb2c"/>
+      <circle cx="92" cy="160" r="3" fill="#f2bb2c"/><circle cx="68" cy="168" r="2.5" fill="#f2bb2c"/>
+      <path d="M36 160 Q34 176 46 180" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>
+
+  <!-- 시험관 -->
+  <svg class="deco" style="top:700px;left:-6px;width:150px;height:200px" viewBox="0 0 150 200">
+    <g transform="rotate(25 50 100)">
+      <rect x="30" y="20" width="34" height="150" rx="17" fill="#8fd18b" stroke="#79bf74" stroke-width="3"/>
+      <rect x="35" y="70" width="24" height="95" rx="12" fill="#3f4fa8"/>
+      <rect x="24" y="12" width="46" height="14" rx="6" fill="#8fd18b" stroke="#79bf74" stroke-width="3"/>
+      <circle cx="47" cy="100" r="3" fill="#f2bb2c"/><circle cx="50" cy="125" r="3" fill="#f2bb2c"/>
+    </g>
+    <g transform="rotate(12 100 100)">
+      <rect x="78" y="22" width="36" height="160" rx="18" fill="#f2bb2c" stroke="#e0a516" stroke-width="3"/>
+      <rect x="84" y="70" width="24" height="106" rx="12" fill="#3f4fa8"/>
+      <rect x="72" y="12" width="48" height="16" rx="6" fill="#f2bb2c" stroke="#e0a516" stroke-width="3"/>
+      <circle cx="96" cy="95" r="3.5" fill="#f2bb2c"/><circle cx="92" cy="120" r="3" fill="#f2bb2c"/>
+      <path d="M90 140 Q88 160 98 168" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>
+
+  <!-- 전구 -->
+  <svg class="deco" style="top:880px;right:-10px;width:110px;height:200px" viewBox="0 0 110 200">
+    <g stroke="#1b1b1b" stroke-width="3" stroke-linecap="round">
+      <line x1="58" y1="8" x2="62" y2="30"/><line x1="10" y1="50" x2="32" y2="64"/><line x1="4" y1="104" x2="26" y2="102"/>
+    </g>
+    <g transform="rotate(-25 80 110)">
+      <circle cx="80" cy="90" r="42" fill="#e8533b"/>
+      <path d="M66 100 Q70 80 80 104 Q90 80 94 100 L90 130 L70 130 Z" fill="none" stroke="#1b1b1b" stroke-width="2.5"/>
+      <rect x="62" y="128" width="36" height="12" rx="5" fill="#6b5aa8" stroke="#1b1b1b" stroke-width="2"/>
+      <rect x="64" y="140" width="32" height="12" rx="5" fill="#6b5aa8" stroke="#1b1b1b" stroke-width="2"/>
+      <rect x="68" y="152" width="24" height="10" rx="5" fill="#4a3d85" stroke="#1b1b1b" stroke-width="2"/>
+    </g>
+  </svg>
+
+  <!-- ===== 헤더 ===== -->
+  <div class="student">20701 김민지</div>
+  <div class="title-box"><h1>라이페이스</h1></div>
+
+  <!-- ===== 작용 원리와 구조 ===== -->
+  <h2 class="section">작용 원리와 구조</h2>
+  <div class="principle">
+    <div class="viewer-wrap">
+      <div id="viewer"><div class="viewer-status" id="viewer-status">3D 구조를 불러오는 중…</div></div>
+      <div class="viewer-hint">드래그: 회전 · 휠: 확대/축소</div>
+      <div class="viewer-tools">
+        <button type="button" id="spin-btn">회전 멈춤</button>
+        <button type="button" id="reset-btn">처음 위치</button>
+        <label>PDB 파일 열기<input type="file" id="pdb-file" accept=".pdb,.ent,.cif"></label>
+      </div>
+    </div>
+
+    <div class="principle-text">
+      <p>작용 원리: 트리아실글리세롤을 가수분해하여 글리세롤과 3개의 지방산으로 분해</p>
+
+      <!-- 반응식 -->
+      <svg class="reaction" viewBox="0 0 680 220" font-family="Arial, sans-serif" font-size="16" stroke="#222" stroke-width="1.8" fill="none">
+        <defs>
+          <g id="ester">
+            <text x="-5" y="5" stroke="none" fill="#222">O</text>
+            <path d="M7 -2 L20 -10 M18 -12 V-27 M22 -12 V-27 M20 -10 L34 -2 L48 -10 L62 -2 L76 -10 L90 -2 L104 -10 L118 -2 L132 -10 L146 -2"/>
+            <text x="16" y="-30" stroke="none" fill="#222">O</text>
+          </g>
+        </defs>
+
+        <!-- 트리아실글리세롤 -->
+        <path d="M20 45 H8 V155 H20 M8 100 H20"/>
+        <use href="#ester" x="26" y="45"/>
+        <use href="#ester" x="26" y="100"/>
+        <use href="#ester" x="26" y="155"/>
+        <text x="200" y="106" stroke="none" fill="#222" font-size="20">+3H<tspan font-size="11" dy="4">2</tspan><tspan dy="-4">O</tspan></text>
+
+        <!-- 효소 + 평형 화살표 -->
+        <text x="318" y="60" stroke="none" fill="#1f1fd1" font-size="16" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-weight="500">라이페이스</text>
+        <text x="318" y="77" stroke="none" fill="#1f1fd1" font-size="16" text-anchor="middle" font-family="Noto Sans KR, sans-serif" font-weight="500">(Lipase)</text>
+        <path d="M288 96 H350 L340 90 M350 103 H288 L298 109"/>
+
+        <!-- 글리세롤 -->
+        <path d="M392 45 H382 V155 H392 M382 100 H392"/>
+        <text x="395" y="50" stroke="none" fill="#222" font-size="15">OH</text>
+        <text x="395" y="105" stroke="none" fill="#222" font-size="15">OH</text>
+        <text x="395" y="160" stroke="none" fill="#222" font-size="15">OH</text>
+        <text x="428" y="106" stroke="none" fill="#222" font-size="20">+ 3</text>
+
+        <!-- 지방산 -->
+        <text x="466" y="114" stroke="none" fill="#222" font-size="15">HO</text>
+        <path d="M492 106 L506 98 M504 96 V81 M508 96 V81 M506 98 L520 106 L534 98 L548 106 L562 98 L576 106 L590 98 L604 106 L618 98 L632 106"/>
+        <text x="502" y="77" stroke="none" fill="#222">O</text>
+
+        <!-- 이름 -->
+        <g stroke="none" fill="#222" font-family="Noto Sans KR, sans-serif" font-weight="500" font-size="22" text-anchor="middle">
+          <text x="95" y="205">트리아실글리세롤</text>
+          <text x="400" y="205">글리세롤</text>
+          <text x="555" y="205">지방산</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== 활용 사례 ===== -->
+  <h2 class="section">활용 사례</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">의료</div>
+      <div class="card-body">
+        <p>암 치료: 암세포의 세포사멸을 유도, 활성산소 생성 증가 및 약물 흡수를 개선을 통한 암세포의 화학요법에 대한 민감도 향상, 세포막 변형을 통해 약물 전달 향상, 약물 내성 극복</p>
+        <p>의약품: 거울상 이성질체를 구별하는 능력을 이용해 이부프로펜에서 약효가 있는 S형 추출</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">화장품/세제</div>
+      <div class="card-body">
+        <p>화장품: 비타민과 펩타이드와 같은 활성 성분을 캡슐화하는 데 사용되어 노화 방지 세럼과 같은 제품에서 안정성과 제어 방출 향상, 크림, 로션, 샴푸용 유화제와 계면활성제 생산에 도움</p>
+        <p>세제: 라이페이스 기반 세제는 계면활성제와 결합하여 섬유에서 기름때를 제거</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">바이오센서</div>
+      <div class="card-body">
+        <p>오일과 식품의 산패를 감지하여 신선도를 모니터링하고, 기름 유출과 같은 환경 오염 물질에서 기름의 분해 과정을 추적하는 데 사용</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">식품</div>
+      <div class="card-body">
+        <p>치즈나 쌀의 풍미를 개선하고, 사과주에 향을 더하고, 두유를 변형하는 데 널리 사용되며, 고기의 지방 함량을 줄이는 과정인 바이오리폴리시스에도 사용</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="reference">
+    Abdelaziz, A. A., Abo-Kamar, A. M., Elkotb, E. S., &amp; Al-Madboly, L. A. (2025). Microbial lipases: advances in production, purification,<br>
+    biochemical characterization, and multifaceted applications in industry and medicine. Microbial cell factories, 24(1), 40.<br>
+    <a href="https://doi.org/10.1186/s12934-025-02664-6" target="_blank" rel="noopener">https://doi.org/10.1186/s12934-025-02664-6</a>
+  </div>
+</div>
+
+<script>
+  // ▼ 다른 효소 구조로 바꾸고 싶으면 여기만 수정하세요.
+  const UNIPROT_ID = "P16233";   // AlphaFold 예측 구조 (인간 췌장 라이페이스)
+  const FALLBACK_PDB_ID = "1LPB"; // AlphaFold 로딩 실패 시 RCSB PDB 실험 구조
+
+  const statusEl = document.getElementById("viewer-status");
+  const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "white", antialias: true });
+  let spinning = true;
+
+  // AlphaFold pLDDT(신뢰도) 색 – 포스터 이미지와 같은 파랑/하늘/노랑/주황
+  function plddtColor(atom) {
+    const b = atom.b;
+    if (b >= 90) return "#0053D6";
+    if (b >= 70) return "#65CBF3";
+    if (b >= 50) return "#FFDB13";
+    return "#FF7D45";
+  }
+
+  function show(pdbText, format, colorMode) {
+    viewer.clear();
+    const model = viewer.addModel(pdbText, format || "pdb");
+
+    if (colorMode === "largestChain") {
+      // 실험 구조에 여러 사슬이 있으면 가장 긴 사슬(라이페이스)만 표시
+      const counts = {};
+      model.selectedAtoms({ atom: "CA" }).forEach(a => counts[a.chain] = (counts[a.chain] || 0) + 1);
+      const main = Object.keys(counts).sort((x, y) => counts[y] - counts[x])[0];
+      viewer.setStyle({}, {});
+      viewer.setStyle({ chain: main }, { cartoon: { color: "spectrum" } });
+    } else if (colorMode === "plddt") {
+      viewer.setStyle({}, { cartoon: { colorfunc: plddtColor } });
+    } else {
+      viewer.setStyle({}, { cartoon: { color: "spectrum" } });
+    }
+
+    viewer.zoomTo();
+    viewer.render();
+    viewer.spin(spinning ? "y" : false, 0.6);
+    statusEl.style.display = "none";
+  }
+
+  async function fetchText(url) {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }
+
+  async function loadDefault() {
+    try {
+      const info = await (await fetch("https://alphafold.ebi.ac.uk/api/prediction/" + UNIPROT_ID)).json();
+      show(await fetchText(info[0].pdbUrl), "pdb", "plddt");
+    } catch (e1) {
+      try {
+        show(await fetchText("https://files.rcsb.org/download/" + FALLBACK_PDB_ID + ".pdb"), "pdb", "largestChain");
+      } catch (e2) {
+        statusEl.textContent = "구조를 불러오지 못했습니다.\n인터넷 연결을 확인하거나 PDB 파일을 직접 열어주세요.";
+      }
+    }
+  }
+
+  document.getElementById("spin-btn").addEventListener("click", e => {
+    spinning = !spinning;
+    viewer.spin(spinning ? "y" : false, 0.6);
+    e.target.textContent = spinning ? "회전 멈춤" : "자동 회전";
+  });
+
+  document.getElementById("reset-btn").addEventListener("click", () => {
+    viewer.zoomTo();
+    viewer.render();
+  });
+
+  document.getElementById("pdb-file").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const isCif = /\.cif$/i.test(file.name);
+      const text = reader.result;
+      // AlphaFold 파일이면 신뢰도 색, 아니면 무지개 색
+      const isAlphaFold = /ALPHAFOLD/i.test(text.slice(0, 2000));
+      show(text, isCif ? "cif" : "pdb", isAlphaFold ? "plddt" : "spectrum");
+    };
+    reader.readAsText(file);
+  });
+
+  loadDefault();
+</script>
+</body>
+</html>
