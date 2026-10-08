@@ -167,6 +167,12 @@
     word-break: keep-all;
   }
   .card-body p { margin: 0; }
+  .card-body ul {
+    margin: 0;
+    padding-left: 1.1em;
+    text-align: left;
+  }
+  .card-body:has(ul) { display: flex; align-items: center; justify-content: center; }
 
   .reference {
     text-align: center;
@@ -174,6 +180,8 @@
     line-height: 1.5;
     margin-top: 22px;
     color: #222;
+    position: relative;
+    z-index: 3;
   }
   .reference a { color: inherit; text-decoration: none; }
 
@@ -201,7 +209,7 @@
     <path d="M0 90 C60 100 120 120 160 140"/>
     <path d="M10 200 C70 220 110 270 80 320 C60 350 20 360 0 350"/>
   </svg>
-  <svg class="deco dash" style="bottom:20px;right:-10px;width:300px;height:420px" viewBox="0 0 300 420">
+  <svg class="deco dash" style="bottom:70px;right:-10px;width:300px;height:420px" viewBox="0 0 300 420">
     <path d="M300 20 C230 20 200 80 240 120 C280 160 300 200 260 240"/>
     <path d="M300 260 C230 260 180 300 200 360 C210 390 240 410 270 420"/>
     <path d="M110 420 C130 380 150 360 190 350"/>
@@ -321,15 +329,19 @@
     <div class="card">
       <div class="card-label">의료</div>
       <div class="card-body">
-        <p>암 치료: 암세포의 세포사멸을 유도, 활성산소 생성 증가 및 약물 흡수를 개선을 통한 암세포의 화학요법에 대한 민감도 향상, 세포막 변형을 통해 약물 전달 향상, 약물 내성 극복</p>
-        <p>의약품: 거울상 이성질체를 구별하는 능력을 이용해 이부프로펜에서 약효가 있는 S형 추출</p>
+        <ul>
+          <li>암 치료: 암세포의 세포사멸 유도, 활성산소 생성 증가 및 약물 흡수 개선을 통한 암세포의 화학요법에 대한 민감도 향상, 세포막 변형을 통해 약물 전달 향상, 약물 내성 극복</li>
+          <li>의약품: 거울상 이성질체 구별 능력을 이용해 이부프로펜에서 약효가 있는 S형 추출에 활용</li>
+        </ul>
       </div>
     </div>
     <div class="card">
       <div class="card-label">화장품/세제</div>
       <div class="card-body">
-        <p>화장품: 비타민과 펩타이드와 같은 활성 성분을 캡슐화하는 데 사용되어 노화 방지 세럼과 같은 제품에서 안정성과 제어 방출 향상, 크림, 로션, 샴푸용 유화제와 계면활성제 생산에 도움</p>
-        <p>세제: 라이페이스 기반 세제는 계면활성제와 결합하여 섬유에서 기름때를 제거</p>
+        <ul>
+          <li>화장품: 비타민과 펩타이드와 같은 활성 성분 캡슐화에 사용되어 노화 방지 세럼과 같은 제품에서 안정성과 제어 방출 향상, 크림, 로션, 샴푸용 유화제와 계면활성제 생산에 도움</li>
+          <li>세제: 계면활성제와 결합하여 섬유에서 기름때 제거</li>
+        </ul>
       </div>
     </div>
     <div class="card">
@@ -347,16 +359,41 @@
   </div>
 
   <div class="reference">
-    Abdelaziz, A. A., Abo-Kamar, A. M., Elkotb, E. S., &amp; Al-Madboly, L. A. (2025). Microbial lipases: advances in production, purification,<br>
-    biochemical characterization, and multifaceted applications in industry and medicine. Microbial cell factories, 24(1), 40.<br>
-    <a href="https://doi.org/10.1186/s12934-025-02664-6" target="_blank" rel="noopener">https://doi.org/10.1186/s12934-025-02664-6</a>
+    Abdelaziz, A. A., Abo-Kamar, A. M., Elkotb, E. S., &amp; Al-Madboly, L. A. (2025). Microbial lipases: advances in production, purification, biochemical characterization, and
+    multifaceted applications in industry and medicine. Microbial cell factories, 24(1), 40. <a href="https://doi.org/10.1186/s12934-025-02664-6" target="_blank" rel="noopener">https://doi.org/10.1186/s12934-025-02664-6</a><br>
+    <a href="https://terms.naver.com/%EC%83%9D%EB%AA%85-%EC%98%81%EC%96%91-%EC%8B%9D%ED%92%88/%EB%A6%AC%ED%8C%8C%EC%95%84%EC%A0%9C-5hgn3R4c6reHcJmkz95yS1" target="_blank" rel="noopener" style="word-break:break-all">https://terms.naver.com/%EC%83%9D%EB%AA%85-%EC%98%81%EC%96%91-%EC%8B%9D%ED%92%88/%EB%A6%AC%ED%8C%8C%EC%95%84%EC%A0%9C-5hgn3R4c6reHcJmkz95yS1</a>
   </div>
 </div>
 
 <script>
-  // ▼ 다른 효소 구조로 바꾸고 싶으면 여기만 수정하세요.
-  const UNIPROT_ID = "P16233";   // AlphaFold 예측 구조 (인간 췌장 라이페이스)
-  const FALLBACK_PDB_ID = "1LPB"; // AlphaFold 로딩 실패 시 RCSB PDB 실험 구조
+  // 첨부한 AlphaFold PDB 파일(인간 췌장 라이페이스, P16233)의 뼈대 원자(N, CA, C, O) 좌표를
+  // 압축해서 넣어 두었습니다. 페이지가 열릴 때 PDB 형식으로 다시 만들어 표시합니다.
+  const SEQ = "MLPLWTLSLLLGAVAGKEVCYERLGCFSDDSPWSGITERPLHILPWSPKDVNTRFLLYTNENPNNFQEVAADSSSISGSNFKTNRKTRFIIHGFIDKGEENWLANVCKNLFKVESVNCICVDWKGGSRTGYTQASQNIRIVGAEVAYFVEFLQSAFGYSPSNVHVIGHSLGAHAAGEAGRRTNGTIGRITGLDPAEPCFQGTPELVRLDPSDAKFVDVIHTDGAPIVPNLGFGMSQVVGHLDFFPNGGVEMPGCKKNILSQIVDIDGIWEGTRDFAACNHLRSYKYYTDSIVNPDGFAGFPCASYNVFTANKCFPCPSGGCPQMGHYADRYPGKTNDVGQKFYLDTGDASNFARWRYKVSVTLSGKKVTGHILVSLFGNKGNSKQYEIFKGTLKPDSTHSNEFDSDVDVGDLQMVKFIWYNNVINPTLPRVGASKIIVETNVGKQFNFCSPETVREEVLLTLTPC";
+  const PLDDT = [43,44,45,45,44,47,46,45,47,45,47,47,58,61,71,78,93,97,97,98,97,92,93,97,97,98,98,97,96,96,96,97,97,96,94,96,96,95,96,95,95,96,95,98,98,98,98,98,97,97,98,97,98,98,99,99,99,99,99,98,98,98,97,97,97,98,98,98,98,97,96,96,97,97,98,98,97,98,98,98,99,98,98,98,98,99,99,99,99,99,99,98,95,87,81,76,74,61,85,86,92,96,96,96,96,98,98,98,98,99,98,98,98,98,99,99,99,99,99,99,99,98,98,95,95,96,95,92,93,94,95,95,98,98,98,98,98,98,99,99,99,99,99,99,99,99,99,99,99,98,98,98,98,98,98,98,98,98,98,99,98,99,99,99,99,99,99,99,98,98,99,99,99,99,99,99,99,99,99,99,99,98,98,98,99,99,99,99,99,99,99,99,99,99,98,98,96,97,98,98,97,98,98,98,98,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,97,97,95,93,89,89,90,90,89,92,94,97,98,97,98,98,99,99,99,99,99,99,99,99,99,98,98,97,96,98,97,96,95,89,81,79,79,79,79,81,78,82,87,85,87,84,85,87,86,81,78,80,78,81,84,89,94,96,97,96,98,99,98,98,99,99,98,98,99,99,98,98,98,97,98,99,99,99,99,98,98,98,98,98,98,98,99,98,98,98,98,98,98,98,98,96,90,89,95,98,98,99,99,99,99,99,99,98,98,98,96,95,98,98,96,97,98,97,98,98,99,99,99,99,99,98,97,94,91,94,98,98,99,99,99,99,99,99,99,99,99,99,98,97,95,96,96,96,96,98,98,99,99,99,99,99,98,98,97,97,98,98,98,98,98,98,98,98,97,97,97,97,97,97,97,98,98,98,98,98,98,98,98,98,97,97,96,98,96,96,98,98,98,99,99,99,98,98,97,91,86,85,81,80,86,89,91,94,98,98,98,99,98,99,99,99,99,98,98,96,95,96,96,98,98,99,99,99,98,97,98,98,98,96,95,96,97,98,98,99,99,98,98,96];
+  const XYZ = "av/jAa39eP/iAa/9fP/jAb39ff/uAcL9ff/YAcX9g//WAdL9gv/HAdX9dv/DAdj9jP++AdP9i/+wAdj9j/+vAeb9mv+zAer9hv+qAe/9if+mAfz9lP+bAfz9kv+QAfb9n/+dAQL+qf+SAQX+pP+KARH+pP+OARz+oP9+AQ7+nv9zARj+rP9uAR3+s/9nARb+r/9yASn+u/9tATD+uP9eATT+sf9cAT7+vf9VASz+vf9HATD+yP9FATr+1P9FATj+w/9CAUf+zP89AVH+0f8vAU3+yf8mAU7+3f8uAUn+5f8iAUn+5/8eAVj+8f8jAV7+3/8VAV3+4v8NAWn+7f8DAWT+6//3AGH++v8IAWT+BQD/AGT+BgD4AHL+CQD/AHv+BADrAHP+BwDkAH/+FgDlAIH+HgDgAHn+GgDsAIz+KADsAJD+KwDfAJX+JgDbAJ/+MwDXAI7+OADKAJL+QADLAJ/+SQDUAKD+PQDDAKn+RADCALb+UwC+ALT+VwC5AKn+WwDBAL7+aQC7AL7+aACtAMP+XwCpAMr+cgClAL/+dACXAMP+ggCUAMj+jACaAMP+gwCMANL+kACGANf+jwB3ANf+hQByANv+mgBwANP+mwBiANT+pgBdAN3+sQBjANz+owBTAOT+rQBNAO3+rwA+AOr+pQA3AOf+uwA6AOv+vwAsAOn+tgAiAPL+tAAlAP7+sQAYAOz+pwAOAPL+mQATAPX+kAALAPT+lwAgAPj+igAlAPz+gQArAPH+dQAtAPP+hwAtAOX+gAAzANr+gABCANr+iABJAOH+dgBIANP+dABXANL+aQBcANr+XwBWANz+agBpAN7+YQBwAOb+XwB+AOD+aQCGAN/+UwCCANv+UACPANb+SACXAOH+QwCSAOr+SAClAN7+QACuAOX+MwCyAN3+LQC9AN/+LwCqANP+IwCrAMz+FwCoANb+GAChAOD+CwCsANH+/v+oANj+/f+ZANf+AACTAM3++f+SAOL+9P+YAO/+/v+ZAPr++v+cAAb/CwCYAPj+FQCYAAL/FwCnAAf/GwCoABP/FQCwAP/+FgC/AAH/DADGAPf+BgDAAO7+CgDTAPn+AgDcAPD+8//aAPH+7P/eAOj+7v/TAPz+4P/RAP/+3P/ZAAz/5f/eABP/0P/bAA7/y//jABr/0P/eACf/1P/nAC//0f/RACn/1v/LADX/5f/LADf/6v/KAEL/7P/NACv/+//MACr/AADXACD/BQDTABb////kACP/AQDuABn/EADwABX/EwD1AAr/GgDtAB7/KADvABv/LgDkABL/LQDYABb/NADnAAf/PADeAP/+SgDbAAb/UwDkAAb/SgDQAAz/VgDLABT/WQC9ABD/UAC0ABD/ZQC6AA3/agCsAAr/bwCmABj/dACtACD/bgCZABn/dQCSACT/hACUACT/igCVABr/igCTADD/mACTADH/ngCGACz/lwB8ACr/qwCFACr/sgB5ACb/sQBuADH/sQBxAD3/sgBhAC7/sgBWADf/vgBXAEH/vABUAE3/yQBdAD3/1QBgAEb/0QBqAFD/1gBpAFv/ygB1AE3/xwCAAFb/uwB8AF//uwB/AGv/sQB0AFr/pwBuAGP/rQBkAG3/qABkAHj/twBdAGj/vgBTAHD/tQBJAHj/tgBIAIT/rQBCAHD/pAA4AHb/rAAsAHv/tAAmAHP/qgApAIj/sQAdAI7/pwATAJP/nAAWAJn/qgAGAJH/ogD7/5X/qAD0/6L/sgDu/6H/ogD2/63/pwDx/7r/oADl/77/lQDl/8T/pgDZ/7z/oADM/7//oQDI/87/rADG/9P/lgDG/9T/lQC//+H/jgCy/9//hACx/9j/kgCo/+b/iwCa/+f/igCW//X/kACc//7/gwCL//j/gwCE/wUAkQCB/woAkwCB/xYAmwB//wEAqQB8/wUAsQCI/wgAuwCH/w8ArgCU/wMAtACh/wYAqgCs/wkAqQC2/wMAogCr/xQAlwCz/xcAmwDC/xwAkwDL/xwAqADE/yAArQDQ/yUAtgDY/xwAtwDk/x0AvQDR/xMAxwDX/woAwwDU//z/wgDI//j/wgDe//P/vwDb/+X/ywDV/93/1gDY/+H/yADO/9P/0QDM/8j/zQDV/7z/wQDV/7j/1gDe/7j/0wDm/6z/1ADd/6D/3gDX/53/yQDd/5j/xwDU/43/xQDd/4D/vwDo/4D/ygDY/3X/xwDd/2f/wADT/1//wADH/2L/ugDY/1T/tQDP/0n/wADJ/0H/wgDL/zX/yQDA/0j/1AC5/0L/1ACr/0n/0QCp/1X/2QCh/0L/2ACT/0f/4QCQ/1L/3gCI/1v/7QCX/1P/9wCV/13/8gCb/2r/8wCV/3X/7QCn/2r/5wCu/3b/2wCm/3z/2wCj/4j/0gCh/3T/xgCZ/3n/ywCM/37/yACI/4n/1ACF/3f/2AB3/3v/4gB4/4f/4wBu/4//6QCD/4n/8gCF/5T/6wCL/6D/8QCM/6v/3gCN/5//1QCS/6r/zQCG/7H/zgB7/63/xQCK/7v/vACB/8H/rgB//7n/pgB4/77/rQCF/67/oQCE/6b/nQB2/6P/pQBu/5//kABy/6X/iwBk/6P/gABl/5n/dQBr/5v/ggBd/47/eABc/4P/awBU/4f/YQBW/4D/awBN/5L/YABF/5f/WABN/6L/UABI/6n/WgBb/6P/UwBk/6z/TABv/6P/UQBy/5n/QQB1/6n/PACB/6P/RgCN/6X/TgCM/67/RQCX/53/TQCj/53/RACv/5//OwCx/5j/SAC3/6n/QADD/6z/SgDP/6v/UwDQ/7P/RwDY/6H/TgDl/6D/RwDv/6n/OgDv/6n/TgD4/6//SQADALf/TwAQALL/WwASALP/RwAYAKz/SwAlAKb/RgAwAK7/OgAyALD/TwA5ALP/SwBFALr/RgBQALH/SQBQAKX/QABaALf/PgBnALL/RAByALv/UAByAL3/OwB6AMH/PwCEAMv/RQB8ANf/PwByANz/UACBAN3/VgB7AOn/VwCHAPP/XwCQAPH/TwCGAP3/UACPAAkAXACMABIAYQCBABIAYACWABkAawCVACMAaACKAC0AXgCMADUAcQCBAC8AbwB2ADgAaABpADMAZwBfADoAYgBqACcAXABfACAAZQBXABcAYABNABAAcgBZABYAewBUAAwAfABEAAwAgAA+AAIAeAA+ABcAeAAvABkAawAoABYAagAcABgAYQAvABIAUwApABEAUwAeAAcATQATAAoAWwAeAPz/WwAUAPL/YQAHAPj/WwD8//f/bAAIAP//cgD9/wYAaQD3/xEAaQDr/xQAYQAAABgAVwD7/yIATADz/xwASADp/yIARwD3/xAAPgDu/wgARADh/wUAPgDX/wkAUQDg/wAAWADU//7/WQDL/woAVgC//woAXADR/xYAXQDK/yMAUADE/ycAUAC5/ywARQDL/yUAOADF/ygANAC6/x4ALgCw/yIANwC7/xEANQCw/wcAPQCk/wwANwCZ/wwASQCl/xAAUQCZ/xUASwCS/yEATwCG/yQAQgCY/ykAOwCR/zQAMACI/y8ALAB//zcAKgCK/yMAHwCC/x4AIQB6/xEAGQBx/w4ALAB9/woALwB2//3/PgB2//r/RgB9/wAAQgBt//H/TwBt/+v/TwB0/97/SABw/9T/VgB//93/VACJ/9L/YgCQ/87/agCS/9f/YwCT/8H/bgCd/73/aACr/77/XgCu/7f/bQCz/8f/aADB/8n/cgDL/8T/fQDM/8n/bwDS/7n/eADb/7L/cwDq/7X/aQDu/6//ewDx/73/eAAAAL//fgAHALP/igAFALD/dgAQAKz/ewAYAKH/fgAmAKb/dQAuAKj/iwApAKf/kAA2AKz/kwA+AJ//mwA7AJf/iwBJAJ7/jQBTAJL/jgBhAJf/iwBrAJD/lABjAKP/lgBwAKr/ngB6AKH/nACGAKL/pgB1AJj/rQB9AI7/pACFAIT/pQCRAIP/mQB+AID/jwCEAHf/gwCKAH//ewCSAHn/gQCHAIz/dgCMAJT/eQCZAJr/bwChAJ3/hQCcAJ7/iQCpAKX/jAC0AJv/lwC5AJn/gQC5AJX/gADEAIv/cgDKAIv/agDFAJL/cADUAIP/YgDaAIL/WADPAH7/WwDGAHf/SwDRAIP/QQDGAIP/PgDCAHT/PAC2AHH/PQDMAGv/OwDJAF3/RgDBAFb/QwC4AE7/UgDEAFr/XgC7AFX/XQCuAFv/XwCkAFT/WwCsAGj/WQCgAG//TgCXAGj/UACLAGb/QwCeAGX/NwCYAF7/OwCTAE//MwCLAEr/RgCYAEn/SwCTAD3/VQCHAD//VAB9ADj/XQCJAEr/ZwB/AE3/YQBxAFH/aABnAE//VQBxAFb/TgBkAFj/TQBbAEv/TQBPAEz/TgBhAD//TgBaADL/WwBSADH/WgBGACz/ZgBXADb/cwBQADb/cgBFAED/dgA5AD7/bQBHAEz/bAA9AFf/YwAyAFP/ZwAmAFT/VwA1AE3/TgAqAEf/VQAiADz/VAAWADz/XQApADP/ZAAiACn/bwAZAC7/cQANACn/dwAdADj/gQAVAD//ewAJAEb/gAD+/0X/bwAKAE3/aAD//1P/YwD1/0n/ZADp/0r/XQD6/z7/WADy/zP/ZADq/y3/YwDd/yv/bwDw/yr/ewDq/yX/gADf/y//hADU/yr/gADi/zz/hADY/0b/egDL/0X/fwDA/0b/bQDN/0T/YwDD/0P/ZQC6/zf/ZQCu/zf/ZwDB/yv/agC6/x7/dwCy/x//eACn/xn/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";
+
+  const AA3 = { A:"ALA", R:"ARG", N:"ASN", D:"ASP", C:"CYS", Q:"GLN", E:"GLU", G:"GLY", H:"HIS", I:"ILE",
+                L:"LEU", K:"LYS", M:"MET", F:"PHE", P:"PRO", S:"SER", T:"THR", W:"TRP", Y:"TYR", V:"VAL" };
+
+  function buildPdb() {
+    const bytes = Uint8Array.from(atob(XYZ), c => c.charCodeAt(0));
+    const xyz = new Int16Array(bytes.buffer);
+    const names = [" N  ", " CA ", " C  ", " O  "];
+    const elems = ["N", "C", "C", "O"];
+    const f = (v, w, d) => v.toFixed(d).padStart(w);
+    const lines = [];
+    let serial = 1;
+    for (let r = 0; r < SEQ.length; r++) {
+      for (let a = 0; a < 4; a++, serial++) {
+        const i = (r * 4 + a) * 3;
+        lines.push("ATOM  " + String(serial).padStart(5) + " " + names[a] + " " + AA3[SEQ[r]] + " A" +
+          String(r + 1).padStart(4) + "    " + f(xyz[i] / 10, 8, 3) + f(xyz[i + 1] / 10, 8, 3) + f(xyz[i + 2] / 10, 8, 3) +
+          f(1, 6, 2) + f(PLDDT[r], 6, 2) + "           " + elems[a]);
+      }
+    }
+    lines.push("END");
+    return lines.join("\n");
+  }
 
   const statusEl = document.getElementById("viewer-status");
   const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "white", antialias: true });
@@ -371,46 +408,26 @@
     return "#FF7D45";
   }
 
+  // 끝의 긴 꼬리(신호 펩타이드)는 빼고 몸통에 맞춰 화면을 채움
+  function fitView() {
+    viewer.zoomTo({ resi: "17-465" });
+    viewer.zoom(1.15);
+    viewer.render();
+  }
+
   function show(pdbText, format, colorMode) {
     viewer.clear();
-    const model = viewer.addModel(pdbText, format || "pdb");
+    viewer.addModel(pdbText, format || "pdb");
 
-    if (colorMode === "largestChain") {
-      // 실험 구조에 여러 사슬이 있으면 가장 긴 사슬(라이페이스)만 표시
-      const counts = {};
-      model.selectedAtoms({ atom: "CA" }).forEach(a => counts[a.chain] = (counts[a.chain] || 0) + 1);
-      const main = Object.keys(counts).sort((x, y) => counts[y] - counts[x])[0];
-      viewer.setStyle({}, {});
-      viewer.setStyle({ chain: main }, { cartoon: { color: "spectrum" } });
-    } else if (colorMode === "plddt") {
+    if (colorMode === "plddt") {
       viewer.setStyle({}, { cartoon: { colorfunc: plddtColor } });
     } else {
       viewer.setStyle({}, { cartoon: { color: "spectrum" } });
     }
 
-    viewer.zoomTo();
-    viewer.render();
+    fitView();
     viewer.spin(spinning ? "y" : false, 0.6);
     statusEl.style.display = "none";
-  }
-
-  async function fetchText(url) {
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(r.status);
-    return r.text();
-  }
-
-  async function loadDefault() {
-    try {
-      const info = await (await fetch("https://alphafold.ebi.ac.uk/api/prediction/" + UNIPROT_ID)).json();
-      show(await fetchText(info[0].pdbUrl), "pdb", "plddt");
-    } catch (e1) {
-      try {
-        show(await fetchText("https://files.rcsb.org/download/" + FALLBACK_PDB_ID + ".pdb"), "pdb", "largestChain");
-      } catch (e2) {
-        statusEl.textContent = "구조를 불러오지 못했습니다.\n인터넷 연결을 확인하거나 PDB 파일을 직접 열어주세요.";
-      }
-    }
   }
 
   document.getElementById("spin-btn").addEventListener("click", e => {
@@ -419,10 +436,7 @@
     e.target.textContent = spinning ? "회전 멈춤" : "자동 회전";
   });
 
-  document.getElementById("reset-btn").addEventListener("click", () => {
-    viewer.zoomTo();
-    viewer.render();
-  });
+  document.getElementById("reset-btn").addEventListener("click", fitView);
 
   document.getElementById("pdb-file").addEventListener("change", e => {
     const file = e.target.files[0];
@@ -438,7 +452,7 @@
     reader.readAsText(file);
   });
 
-  loadDefault();
+  show(buildPdb(), "pdb", "plddt");
 </script>
 </body>
 </html>
