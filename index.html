@@ -106,6 +106,7 @@
 
   const viewer = $3Dmol.createViewer("viewer", { backgroundColor: "white", backgroundAlpha: 0, antialias: true });
   let spinning = true;
+  let homeView = null; // 처음 화면(회전·확대 상태)을 저장
 
   // 끝의 긴 꼬리(신호 펩타이드)는 빼고 몸통에 맞춰 화면을 채움
   function fitView() {
@@ -117,6 +118,7 @@
   viewer.addModel(buildPdb(), "pdb");
   viewer.setStyle({}, { cartoon: { colorfunc: plddtColor } });
   fitView();
+  homeView = viewer.getView();
   viewer.spin("y", 0.6);
 
   // 창 크기가 바뀌면 포스터와 함께 뷰어 크기도 맞춤
@@ -127,7 +129,12 @@
     viewer.spin(spinning ? "y" : false, 0.6);
     e.target.textContent = spinning ? "회전 멈춤" : "자동 회전";
   });
-  document.getElementById("reset-btn").addEventListener("click", fitView);
+  // 처음 위치: 드래그로 돌린 방향과 확대까지 처음 화면으로 되돌림
+  document.getElementById("reset-btn").addEventListener("click", () => {
+    if (!homeView) return;
+    viewer.setView(homeView);
+    viewer.render();
+  });
 </script>
 </body>
 </html>
